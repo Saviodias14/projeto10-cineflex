@@ -1,7 +1,7 @@
+import { useParams } from "react-router-dom"
 import styled from "styled-components"
 
 export default function SeatsPage() {
-
     return (
         <PageContainer>
             Selecione o(s) assento(s)
