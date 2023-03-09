@@ -1,30 +1,97 @@
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import styled from "styled-components"
+import axios from "axios"
+import loading from '../assets/loading.gif'
 
 export default function SeatsPage() {
+    const horarioId = useParams()
+    const [listaAssentos, setListaAssentos] = useState([])
+    const [assentoEscolhido, setAssentoEscolhido] = useState([])
+    useEffect(() => {
+        const promisse = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${horarioId.idSessao}/seats`)
+        promisse.then((lista) => {
+            setListaAssentos(lista.data)
+            setAssentoEscolhido(lista.data.seats.map(()=>false))
+        })
+        promisse.catch((err) => console.log(err.response.data))
+    }, [])
+
+    function escolheAssento(i){
+        if(!listaAssentos.seats[i].isAvailable){
+            alert('Esse assento não está disponível! Escolha outro.')
+        }
+        const aux = [...assentoEscolhido]
+        aux[i] = !aux[i]
+        setAssentoEscolhido(aux)
+        console.log(aux)
+    }
+
+    if (!listaAssentos.seats) {
+        return (
+            <PageContainer>
+                Selecione o(s) assento(s)
+
+                <SeatsContainer>
+                   <img src={loading}/>
+                </SeatsContainer>
+
+                <CaptionContainer>
+                    <CaptionItem>
+                        <CaptionCircle a={1} />
+                        Selecionado
+                    </CaptionItem>
+                    <CaptionItem>
+                        <CaptionCircle a={2} />
+                        Disponível
+                    </CaptionItem>
+                    <CaptionItem>
+                        <CaptionCircle a={3} />
+                        Indisponível
+                    </CaptionItem>
+                </CaptionContainer>
+
+                <FormContainer>
+                    Nome do Comprador:
+                    <input placeholder="Digite seu nome..." />
+
+                    CPF do Comprador:
+                    <input placeholder="Digite seu CPF..." />
+
+                    <button>Reservar Assento(s)</button>
+                </FormContainer>
+
+                <FooterContainer>
+                    <div>
+                    </div>
+                    <div>
+
+                    </div>
+                </FooterContainer>
+
+            </PageContainer>
+        )
+    }
     return (
         <PageContainer>
             Selecione o(s) assento(s)
 
             <SeatsContainer>
-                <SeatItem>01</SeatItem>
-                <SeatItem>02</SeatItem>
-                <SeatItem>03</SeatItem>
-                <SeatItem>04</SeatItem>
-                <SeatItem>05</SeatItem>
+                {listaAssentos.seats.map((n,i) => (
+                    <SeatItem pode={n.isAvailable} clique={assentoEscolhido[i]} onClick={()=>escolheAssento(i)} key={n.id}>{n.name}</SeatItem>))}
             </SeatsContainer>
 
             <CaptionContainer>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle a={1} />
                     Selecionado
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle a={2} />
                     Disponível
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle a={3} />
                     Indisponível
                 </CaptionItem>
             </CaptionContainer>
@@ -41,11 +108,11 @@ export default function SeatsPage() {
 
             <FooterContainer>
                 <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    <img src={listaAssentos.movie.posterURL} alt={listaAssentos.movie.title} />
                 </div>
                 <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                    <p>Sexta - 14h00</p>
+                    <p>{listaAssentos.movie.title}</p>
+                    <p>{listaAssentos.day.weekday} - {listaAssentos.name}</p>
                 </div>
             </FooterContainer>
 
@@ -96,8 +163,8 @@ const CaptionContainer = styled.div`
     margin: 20px;
 `
 const CaptionCircle = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    border: ${props => props.a === 1 ? '1px solid #0E7D71' : props.a === 2 ? '1px solid #7B8B99' : '1px solid #F7C52B'};         // Essa cor deve mudar
+    background-color: ${props => props.a === 1 ? '#1AAE9E' : props.a === 2 ? '#C3CFD9' : '#FBE192'};    // Essa cor deve mudar
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -113,8 +180,8 @@ const CaptionItem = styled.div`
     font-size: 12px;
 `
 const SeatItem = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    border: ${props=>!props.pode?'1px solid #F7C52B':props.clique?'1px solid #0E7D71':'1px solid #7B8B99'};         // Essa cor deve mudar
+    background-color: ${props=>!props.pode?'#FBE192':props.clique?'#1AAE9E':'#C3CFD9'};    // Essa cor deve mudar
     height: 25px;
     width: 25px;
     border-radius: 25px;

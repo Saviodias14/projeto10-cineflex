@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import styled from "styled-components"
 import axios from "axios"
+import loading from '../assets/loading.gif'
 
 export default function SessionsPage() {
     const filmeId = useParams()
@@ -20,7 +21,7 @@ export default function SessionsPage() {
             <PageContainer>
             Selecione o horário
             <div>
-            
+            <img src={loading}/>
             </div>
 
             <FooterContainer>
@@ -37,7 +38,7 @@ export default function SessionsPage() {
                 {listaSessoes.days.map((lista)=>(<SessionContainer key={lista.id} >
                     {lista.weekday} - {lista.date}
                     <ButtonsContainer>
-                        {lista.showtimes.map((h)=>(<button key={h.id}>{h.name}</button>))}
+                        {lista.showtimes.map((h)=>(<Link key={h.id} to={`/assentos/${h.id}`}><button>{h.name}</button></Link>))}
                     </ButtonsContainer>
                 </SessionContainer>))}
             </div>
