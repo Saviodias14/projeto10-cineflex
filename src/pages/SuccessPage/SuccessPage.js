@@ -1,31 +1,55 @@
 import styled from "styled-components"
+import loading from '../assets/loading.gif'
+import { Link } from "react-router-dom"
 
-export default function SuccessPage() {
+export default function SuccessPage({nome, cpf, arrayAssentos, listaAssentos}) {
+    if(!listaAssentos){
+        return(
+            <PageContainer>
+            <h1>Pedido feito <br /> com sucesso!</h1>
 
+            <TextContainer>
+                <strong><p>Filme e sessão</p></strong>
+                <img src={loading}/>
+            </TextContainer>
+
+            <TextContainer>
+                <strong><p>Ingressos</p></strong>
+                {arrayAssentos.map((o)=>(<p>Assento {o.name<10?`0${o.name}`:o.name}</p>))}
+            </TextContainer>
+
+            <TextContainer>
+                <strong><p>Comprador</p></strong>
+                <p>Nome: {nome}</p>
+                <p>CPF: {cpf}</p>
+            </TextContainer>
+
+            <button>Voltar para Home</button>
+        </PageContainer>
+        )
+    }
     return (
         <PageContainer>
             <h1>Pedido feito <br /> com sucesso!</h1>
 
             <TextContainer>
                 <strong><p>Filme e sessão</p></strong>
-                <p>Tudo em todo lugar ao mesmo tempo</p>
-                <p>03/03/2023 - 14:00</p>
+                <p>{listaAssentos.movie.title}</p>
+                <p>{listaAssentos.day.date} - {listaAssentos.name}</p>
             </TextContainer>
 
             <TextContainer>
                 <strong><p>Ingressos</p></strong>
-                <p>Assento 01</p>
-                <p>Assento 02</p>
-                <p>Assento 03</p>
+                {arrayAssentos.map((o)=>(<p>Assento {o.name<10?`0${o.name}`:o.name}</p>))}
             </TextContainer>
 
             <TextContainer>
                 <strong><p>Comprador</p></strong>
-                <p>Nome: Letícia Chijo</p>
-                <p>CPF: 123.456.789-10</p>
+                <p>Nome: {nome}</p>
+                <p>CPF: {cpf}</p>
             </TextContainer>
 
-            <button>Voltar para Home</button>
+            <Link to={'/'}><button>Voltar para Home</button></Link>
         </PageContainer>
     )
 }

@@ -1,39 +1,62 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import styled from "styled-components"
 import axios from "axios"
 import loading from '../assets/loading.gif'
+import { Link } from "react-router-dom"
 
-export default function SeatsPage() {
+export default function SeatsPage({nome, setNome, cpf, setCpf, arrayAssentos, setArrayAssentos, listaAssentos, setListaAssentos}) {
     const horarioId = useParams()
-    const [listaAssentos, setListaAssentos] = useState([])
-    const [assentoEscolhido, setAssentoEscolhido] = useState([])
+    const navigate = useNavigate()
+
     useEffect(() => {
         const promisse = axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${horarioId.idSessao}/seats`)
         promisse.then((lista) => {
             setListaAssentos(lista.data)
-            setAssentoEscolhido(lista.data.seats.map(()=>false))
         })
         promisse.catch((err) => console.log(err.response.data))
     }, [])
 
-    function escolheAssento(i){
-        if(!listaAssentos.seats[i].isAvailable){
+    function escolheAssento(i, assento) {
+        if (!listaAssentos.seats[i].isAvailable) {
             alert('Esse assento não está disponível! Escolha outro.')
         }
-        const aux = [...assentoEscolhido]
-        aux[i] = !aux[i]
-        setAssentoEscolhido(aux)
-        console.log(aux)
+        if (arrayAssentos.includes(assento)) {
+            const novoArray = arrayAssentos.filter((item) => item !== assento)
+            setArrayAssentos(novoArray)
+            console.log(novoArray)
+        } else {
+            let novoArray = [...arrayAssentos]
+            novoArray.push(assento)
+            setArrayAssentos(novoArray)
+            console.log(novoArray)
+        }
     }
-
+    function enviar(e){
+        e.preventDefault()
+        const promisse = axios.post('https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many',{
+        ids: arrayAssentos.map((o)=>o.id),
+        name: nome,
+        cpf:cpf})
+        console.log({
+            ids: arrayAssentos.map((o)=>o.id),
+            name: nome,
+            cpf:cpf})
+        promisse.then((res)=>{
+            console.log(res.data)
+            navigate('/sucesso')
+        })
+        promisse.catch((err)=>{
+            console.log(err.response.data)
+        })
+    }
     if (!listaAssentos.seats) {
         return (
             <PageContainer>
                 Selecione o(s) assento(s)
 
                 <SeatsContainer>
-                   <img src={loading}/>
+                    <img src={loading} />
                 </SeatsContainer>
 
                 <CaptionContainer>
@@ -77,8 +100,8 @@ export default function SeatsPage() {
             Selecione o(s) assento(s)
 
             <SeatsContainer>
-                {listaAssentos.seats.map((n,i) => (
-                    <SeatItem pode={n.isAvailable} clique={assentoEscolhido[i]} onClick={()=>escolheAssento(i)} key={n.id}>{n.name}</SeatItem>))}
+                {listaAssentos.seats.map((n, i) => (
+                    <SeatItem pode={n.isAvailable} clique={arrayAssentos.includes(n)} onClick={() => escolheAssento(i, n)} key={n.id}>{n.name<10?`0${n.name}`:n.name}</SeatItem>))}
             </SeatsContainer>
 
             <CaptionContainer>
@@ -97,13 +120,15 @@ export default function SeatsPage() {
             </CaptionContainer>
 
             <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+                <form onSubmit={enviar}>
+                    <label htmlFor="name">Nome do Comprador:</label>
+                    <input type='text' id="name" value={nome} onChange={(e)=>setNome(e.target.value)} placeholder="Digite seu nome..." />
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
+                    <label htmlFor="cpf">CPF do Comprador:</label>
+                    <input type='text' id="cpf" value={cpf} onChange={(e)=>setCpf(e.target.value)} placeholder="Digite seu CPF..." />
 
-                <button>Reservar Assento(s)</button>
+                    <button type="submit">Reservar Assento(s)</button>
+                </form>
             </FormContainer>
 
             <FooterContainer>
@@ -154,6 +179,9 @@ const FormContainer = styled.div`
     input {
         width: calc(100vw - 60px);
     }
+    a{
+        text-decoration:none;
+    }
 `
 const CaptionContainer = styled.div`
     display: flex;
@@ -180,8 +208,8 @@ const CaptionItem = styled.div`
     font-size: 12px;
 `
 const SeatItem = styled.div`
-    border: ${props=>!props.pode?'1px solid #F7C52B':props.clique?'1px solid #0E7D71':'1px solid #7B8B99'};         // Essa cor deve mudar
-    background-color: ${props=>!props.pode?'#FBE192':props.clique?'#1AAE9E':'#C3CFD9'};    // Essa cor deve mudar
+    border: ${props => !props.pode ? '1px solid #F7C52B' : props.clique ? '1px solid #0E7D71' : '1px solid #7B8B99'};         // Essa cor deve mudar
+    background-color: ${props => !props.pode ? '#FBE192' : props.clique ? '#1AAE9E' : '#C3CFD9'};    // Essa cor deve mudar
     height: 25px;
     width: 25px;
     border-radius: 25px;

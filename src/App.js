@@ -4,16 +4,25 @@ import SeatsPage from "./pages/SeatsPage/SeatsPage"
 import SessionsPage from "./pages/SessionsPage/SessionsPage"
 import SuccessPage from "./pages/SuccessPage/SuccessPage"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { useState } from "react"
 
 export default function App() {
+    const [nome, setNome] = useState('')
+    const [cpf, setCpf] = useState('')
+    const [arrayAssentos, setArrayAssentos] = useState([])
+    const [listaAssentos, setListaAssentos] = useState([])
     return (
         <BrowserRouter>
             <NavContainer>CINEFLEX</NavContainer>
             <Routes>
                 <Route path="/" element={ <HomePage /> } />
-                <Route path="/assentos/:idSessao" element={<SeatsPage />} />
+                <Route path="/assentos/:idSessao" element={<SeatsPage nome={nome} setNome={setNome} 
+                cpf={cpf} setCpf={setCpf} 
+                arrayAssentos={arrayAssentos} setArrayAssentos={setArrayAssentos} 
+                listaAssentos={listaAssentos} setListaAssentos={setListaAssentos} />} />
                 <Route path="/sessoes/:idFilme" element={<SessionsPage />} />
-                <Route path="/sucesso" element={ <SuccessPage /> } />
+                <Route path="/sucesso" element={ <SuccessPage nome={nome} cpf={cpf} 
+                arrayAssentos={arrayAssentos} listaAssentos={listaAssentos} /> } />
             </Routes>
         </BrowserRouter>
     )
