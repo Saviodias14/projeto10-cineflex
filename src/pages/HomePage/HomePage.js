@@ -1,40 +1,33 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
-import loading from '../assets/loading.gif'
 import { Link } from "react-router-dom"
+import HomePageNull from "../../components/HomePageNull"
 
 export default function HomePage() {
     const [listaFilmes, setListaFilmes] = useState([])
 
-    useEffect(()=>{
+    useEffect(() => {
         const promisse = axios.get('https://mock-api.driven.com.br/api/v8/cineflex/movies')
-        promisse.then(lista=>{
+        promisse.then(lista => {
             setListaFilmes(lista.data)
         })
-        promisse.catch(err=> console.log(err.response.data))
-    },[])
+        promisse.catch(err => console.log(err.response.data))
+    }, [])
 
-    if(listaFilmes===[]){
-        return(
-            <PageContainer>
-            Selecione o filme
-
-            <ListContainer>
-               <img src={loading}/>
-            </ListContainer>
-
-        </PageContainer>
+    if (listaFilmes === []) {
+        return (
+            <HomePageNull />
         )
-    } 
+    }
 
     return (
         <PageContainer>
             Selecione o filme
 
             <ListContainer>
-                {listaFilmes.map((filme)=>(<Link key={filme.id} to={`/sessoes/${filme.id}`}><MovieContainer>
-                    <img src={filme.posterURL} alt={filme.title}/>
+                {listaFilmes.map((filme) => (<Link key={filme.id} to={`/sessoes/${filme.id}`}><MovieContainer>
+                    <img src={filme.posterURL} alt={filme.title} />
                 </MovieContainer></Link>))}
             </ListContainer>
 

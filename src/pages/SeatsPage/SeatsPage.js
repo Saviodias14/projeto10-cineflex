@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import styled from "styled-components"
 import axios from "axios"
-import loading from '../assets/loading.gif'
-import { Link } from "react-router-dom"
+import SeatsCaption from "../../components/SeatsCaption"
+import SeatsPageNull from "../../components/SeatsPageNull"
 
 export default function SeatsPage({nome, setNome, cpf, setCpf, arrayAssentos, setArrayAssentos, listaAssentos, setListaAssentos}) {
     const horarioId = useParams()
@@ -52,47 +52,7 @@ export default function SeatsPage({nome, setNome, cpf, setCpf, arrayAssentos, se
     }
     if (!listaAssentos.seats) {
         return (
-            <PageContainer>
-                Selecione o(s) assento(s)
-
-                <SeatsContainer>
-                    <img src={loading} />
-                </SeatsContainer>
-
-                <CaptionContainer>
-                    <CaptionItem>
-                        <CaptionCircle a={1} />
-                        Selecionado
-                    </CaptionItem>
-                    <CaptionItem>
-                        <CaptionCircle a={2} />
-                        Disponível
-                    </CaptionItem>
-                    <CaptionItem>
-                        <CaptionCircle a={3} />
-                        Indisponível
-                    </CaptionItem>
-                </CaptionContainer>
-
-                <FormContainer>
-                    Nome do Comprador:
-                    <input placeholder="Digite seu nome..." />
-
-                    CPF do Comprador:
-                    <input placeholder="Digite seu CPF..." />
-
-                    <button>Reservar Assento(s)</button>
-                </FormContainer>
-
-                <FooterContainer>
-                    <div>
-                    </div>
-                    <div>
-
-                    </div>
-                </FooterContainer>
-
-            </PageContainer>
+            <SeatsPageNull/>
         )
     }
     return (
@@ -104,20 +64,7 @@ export default function SeatsPage({nome, setNome, cpf, setCpf, arrayAssentos, se
                     <SeatItem pode={n.isAvailable} clique={arrayAssentos.includes(n)} onClick={() => escolheAssento(i, n)} key={n.id}>{n.name<10?`0${n.name}`:n.name}</SeatItem>))}
             </SeatsContainer>
 
-            <CaptionContainer>
-                <CaptionItem>
-                    <CaptionCircle a={1} />
-                    Selecionado
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCircle a={2} />
-                    Disponível
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCircle a={3} />
-                    Indisponível
-                </CaptionItem>
-            </CaptionContainer>
+            <SeatsCaption/>
 
             <FormContainer>
                 <form onSubmit={enviar}>
@@ -182,30 +129,6 @@ const FormContainer = styled.div`
     a{
         text-decoration:none;
     }
-`
-const CaptionContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    width: 300px;
-    justify-content: space-between;
-    margin: 20px;
-`
-const CaptionCircle = styled.div`
-    border: ${props => props.a === 1 ? '1px solid #0E7D71' : props.a === 2 ? '1px solid #7B8B99' : '1px solid #F7C52B'};         // Essa cor deve mudar
-    background-color: ${props => props.a === 1 ? '#1AAE9E' : props.a === 2 ? '#C3CFD9' : '#FBE192'};    // Essa cor deve mudar
-    height: 25px;
-    width: 25px;
-    border-radius: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 5px 3px;
-`
-const CaptionItem = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 12px;
 `
 const SeatItem = styled.div`
     border: ${props => !props.pode ? '1px solid #F7C52B' : props.clique ? '1px solid #0E7D71' : '1px solid #7B8B99'};         // Essa cor deve mudar

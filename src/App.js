@@ -7,22 +7,27 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { useState } from "react"
 
 export default function App() {
+    const [listaSessoes, setListaSessoes] = useState([])
     const [nome, setNome] = useState('')
     const [cpf, setCpf] = useState('')
     const [arrayAssentos, setArrayAssentos] = useState([])
     const [listaAssentos, setListaAssentos] = useState([])
+
     return (
         <BrowserRouter>
             <NavContainer>CINEFLEX</NavContainer>
             <Routes>
-                <Route path="/" element={ <HomePage /> } />
-                <Route path="/assentos/:idSessao" element={<SeatsPage nome={nome} setNome={setNome} 
-                cpf={cpf} setCpf={setCpf} 
-                arrayAssentos={arrayAssentos} setArrayAssentos={setArrayAssentos} 
-                listaAssentos={listaAssentos} setListaAssentos={setListaAssentos} />} />
-                <Route path="/sessoes/:idFilme" element={<SessionsPage />} />
-                <Route path="/sucesso" element={ <SuccessPage nome={nome} cpf={cpf} 
-                arrayAssentos={arrayAssentos} listaAssentos={listaAssentos} /> } />
+                <Route path="/" element={<HomePage/>} />
+                <Route path="/assentos/:idSessao" element={<SeatsPage nome={nome} setNome={setNome}
+                    cpf={cpf} setCpf={setCpf}
+                    arrayAssentos={arrayAssentos} setArrayAssentos={setArrayAssentos}
+                    listaAssentos={listaAssentos} setListaAssentos={setListaAssentos} />} />
+                <Route path="/sessoes/:idFilme" element={<SessionsPage listaSessoes={listaSessoes} setListaSessoes={setListaSessoes} />} />
+                <Route path="/sucesso" element={<SuccessPage nome={nome} cpf={cpf}
+                    arrayAssentos={arrayAssentos} listaAssentos={listaAssentos}
+                    setArrayAssentos={setArrayAssentos} setCpf={setCpf}
+                    setListaAssentos={setListaAssentos}
+                    setListaSessoes={setListaSessoes} setNome={setNome} />} />
             </Routes>
         </BrowserRouter>
     )

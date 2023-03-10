@@ -1,26 +1,18 @@
-import styled from "styled-components"
-import { Link } from "react-router-dom"
-import SuccessPageNull from "../../components/SuccessPageNull"
-
-export default function SuccessPage({ nome, cpf, arrayAssentos, listaAssentos, setArrayAssentos, setCpf, setListaAssentos, setListaSessoes, setNome }) {
-    if (!listaAssentos) {
-        return (
-            <SuccessPageNull arrayAssentos={arrayAssentos} nome={nome} cpf={cpf} />
-        )
-    }
-    return (
+import styled from "styled-components";
+import loading from '../assets/loading.gif'
+export default function SuccessPageNull({nome, cpf, arrayAssentos}){
+    return(
         <PageContainer>
             <h1>Pedido feito <br /> com sucesso!</h1>
 
             <TextContainer>
                 <strong><p>Filme e sessão</p></strong>
-                <p>{listaAssentos.movie.title}</p>
-                <p>{listaAssentos.day.date} - {listaAssentos.name}</p>
+                <img src={loading}/>
             </TextContainer>
 
             <TextContainer>
                 <strong><p>Ingressos</p></strong>
-                {arrayAssentos.map((o) => (<p>Assento {o.name < 10 ? `0${o.name}` : o.name}</p>))}
+                {arrayAssentos.map((o)=>(<p>Assento {o.name<10?`0${o.name}`:o.name}</p>))}
             </TextContainer>
 
             <TextContainer>
@@ -29,17 +21,10 @@ export default function SuccessPage({ nome, cpf, arrayAssentos, listaAssentos, s
                 <p>CPF: {cpf}</p>
             </TextContainer>
 
-            <Link to={'/'} onClick={() => {
-                setArrayAssentos([])
-                setCpf('')
-                setListaAssentos([])
-                setListaSessoes([])
-                setNome('')
-            }}><button>Voltar para Home</button></Link>
+            <button>Voltar para Home</button>
         </PageContainer>
     )
 }
-
 const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
