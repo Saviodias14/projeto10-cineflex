@@ -3,10 +3,10 @@ import { Link } from "react-router-dom"
 export default function SessionContainer({listaSessoes}){
     return(
         <div>
-                {listaSessoes.days.map((lista)=>(<SessionContainer1 key={lista.id} >
+                {listaSessoes.days.map((lista)=>(<SessionContainer1 data-test='movie-day' key={lista.id} >
                     {lista.weekday} - {lista.date}
                     <ButtonsContainer>
-                        {lista.showtimes.map((h)=>(<Link key={h.id} to={`/assentos/${h.id}`}><button>{h.name}</button></Link>))}
+                        {lista.showtimes.map((h)=>(<Link data-test='showtime' key={h.id} to={`/assentos/${h.id}`}><button>{h.name}</button></Link>))}
                     </ButtonsContainer>
                 </SessionContainer1>))}
             </div>

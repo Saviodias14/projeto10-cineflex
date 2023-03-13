@@ -12,24 +12,24 @@ export default function SuccessPage({ nome, cpf, arrayAssentos, listaAssentos, s
         <PageContainer>
             <h1>Pedido feito <br /> com sucesso!</h1>
 
-            <TextContainer>
+            <TextContainer data-test='movie-info'>
                 <strong><p>Filme e sessão</p></strong>
                 <p>{listaAssentos.movie.title}</p>
                 <p>{listaAssentos.day.date} - {listaAssentos.name}</p>
             </TextContainer>
 
-            <TextContainer>
+            <TextContainer data-test='seats-info'>
                 <strong><p>Ingressos</p></strong>
                 {arrayAssentos.map((o) => (<p>Assento {o.name < 10 ? `0${o.name}` : o.name}</p>))}
             </TextContainer>
 
-            <TextContainer>
+            <TextContainer data-test='client-info'>
                 <strong><p>Comprador</p></strong>
                 <p>Nome: {nome}</p>
                 <p>CPF: {cpf}</p>
             </TextContainer>
 
-            <Link to={'/'} onClick={() => {
+            <Link data-test='go-home-btn' to={'/'} onClick={() => {
                 setArrayAssentos([])
                 setCpf('')
                 setListaAssentos([])

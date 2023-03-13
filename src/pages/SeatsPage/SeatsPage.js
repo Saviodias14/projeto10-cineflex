@@ -61,7 +61,7 @@ export default function SeatsPage({nome, setNome, cpf, setCpf, arrayAssentos, se
 
             <SeatsContainer>
                 {listaAssentos.seats.map((n, i) => (
-                    <SeatItem pode={n.isAvailable} clique={arrayAssentos.includes(n)} onClick={() => escolheAssento(i, n)} key={n.id}>{n.name<10?`0${n.name}`:n.name}</SeatItem>))}
+                    <SeatItem data-test='seat' pode={n.isAvailable} clique={arrayAssentos.includes(n)} onClick={() => escolheAssento(i, n)} key={n.id}>{n.name<10?`0${n.name}`:n.name}</SeatItem>))}
             </SeatsContainer>
 
             <SeatsCaption/>
@@ -69,16 +69,16 @@ export default function SeatsPage({nome, setNome, cpf, setCpf, arrayAssentos, se
             <FormContainer>
                 <form onSubmit={enviar}>
                     <label htmlFor="name">Nome do Comprador:</label>
-                    <input type='text' id="name" value={nome} onChange={(e)=>setNome(e.target.value)} placeholder="Digite seu nome..." />
+                    <input data-test='client-name' type='text' id="name" value={nome} onChange={(e)=>setNome(e.target.value)} placeholder="Digite seu nome..." />
 
                     <label htmlFor="cpf">CPF do Comprador:</label>
-                    <input type='text' id="cpf" value={cpf} onChange={(e)=>setCpf(e.target.value)} placeholder="Digite seu CPF..." />
+                    <input data-test='client-cpf' type='text' id="cpf" value={cpf} onChange={(e)=>setCpf(e.target.value)} placeholder="Digite seu CPF..." />
 
-                    <button type="submit">Reservar Assento(s)</button>
+                    <button data-test='book-seat-btn' type="submit">Reservar Assento(s)</button>
                 </form>
             </FormContainer>
-
-            <FooterContainer>
+            SeatItem
+            <FooterContainer data-test='footer'>
                 <div>
                     <img src={listaAssentos.movie.posterURL} alt={listaAssentos.movie.title} />
                 </div>
